@@ -22,6 +22,8 @@ interview prep.
 
 ## Setup (about 20 minutes, one time)
 
+For the free, step-by-step version see [SETUP_CHECKLIST.md](SETUP_CHECKLIST.md).
+
 Add each item under **Settings → Secrets and variables → Actions → New
 repository secret**. Everything personal lives in secrets because this repo is
 public.

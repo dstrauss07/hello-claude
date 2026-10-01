@@ -54,9 +54,13 @@ def cmd_digest(args, cfg: dict) -> None:
     log.info("%d postings -> %d relevant -> %d new", total, len(scored), len(fresh))
 
     top = fresh[: cfg["digest"]["ai_review_limit"]]
-    if not args.no_ai and top:
+    # Claude scoring is the only paid step; without a key the digest is free and rule-based.
+    use_ai = bool(top) and not args.no_ai and bool(os.getenv("ANTHROPIC_API_KEY"))
+    if use_ai:
         from . import ai  # imported lazily so --no-ai works without the SDK
         ai.score_jobs(top, load_resume(), cfg)
+    else:
+        log.info("Claude scoring off (no ANTHROPIC_API_KEY or --no-ai): rule-based ranking only")
     top.sort(key=lambda j: j.final_score, reverse=True)
     picks = [j for j in top if not (j.ai and j.ai["fit_score"] < 40)][: cfg["digest"]["email_top"]]
 
@@ -73,8 +77,9 @@ def cmd_digest(args, cfg: dict) -> None:
         log.info("Emailed digest to %d recipient(s)", len(emailer.recipients()))
     else:
         log.warning("SMTP not configured; digest saved to %s only", OUT / "digest.html")
-    # Remember everything Claude reviewed, so it isn't re-scored (or re-sent) tomorrow.
-    store.add(top)
+    # With Claude: remember everything it reviewed so it isn't re-scored tomorrow.
+    # Without: remember only what was emailed, so the rest can surface later.
+    store.add(top if use_ai else picks)
     store.save()
 
 

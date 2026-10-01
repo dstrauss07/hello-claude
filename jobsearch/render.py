@@ -25,7 +25,8 @@ TEMPLATE = """\
   <p style="margin:0 0 16px;color:#52606d;font-size:14px">
     {{ jobs|length }} new match{{ '' if jobs|length == 1 else 'es' }} picked from {{ total }} postings.
     {% if tailor_url %}Want a tailored resume and cover letter? Copy the job's ID and
-    <a href="{{ tailor_url }}">run "Tailor application"</a>.{% endif %}
+    <a href="{{ tailor_url }}">run "Tailor application"</a>.{% else %}For a tailored resume
+    and cover letter, paste the posting and your resume into <a href="https://claude.ai">claude.ai</a>.{% endif %}
   </p>
   {% for j in jobs %}
   <div style="border:1px solid #d9e2ec;border-radius:8px;padding:14px 16px;margin:0 0 12px">
@@ -63,7 +64,10 @@ def _color(score: int) -> str:
 
 def tailor_url() -> str:
     repo = os.getenv("GITHUB_REPOSITORY")
-    return f"https://github.com/{repo}/actions/workflows/tailor.yml" if repo else ""
+    # The tailor workflow needs a (paid) Claude API key; hide the link without one.
+    if not (repo and os.getenv("ANTHROPIC_API_KEY")):
+        return ""
+    return f"https://github.com/{repo}/actions/workflows/tailor.yml"
 
 
 def digest_html(jobs: list[Job], total: int, status: dict[str, str], today: date | None = None) -> str:
