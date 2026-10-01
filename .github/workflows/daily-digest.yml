@@ -1,0 +1,52 @@
+name: Daily job digest
+
+on:
+  schedule:
+    - cron: "47 10 * * *"   # 6:47am Eastern (daylight time) / 5:47am standard time
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jobsearch-state
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      # Already-sent jobs live in the Actions cache, not the (public) repo.
+      - uses: actions/cache/restore@v4
+        with:
+          path: state
+          key: jobsearch-state-${{ github.run_id }}
+          restore-keys: jobsearch-state-
+
+      - name: Build and email digest
+        run: python -m jobsearch digest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESUME_TEXT: ${{ secrets.RESUME_TEXT }}
+          CANDIDATE_CONTEXT: ${{ secrets.CANDIDATE_CONTEXT }}
+          USAJOBS_API_KEY: ${{ secrets.USAJOBS_API_KEY }}
+          USAJOBS_EMAIL: ${{ secrets.USAJOBS_EMAIL }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: state
+          key: jobsearch-state-${{ github.run_id }}

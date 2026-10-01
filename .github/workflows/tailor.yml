@@ -1,0 +1,38 @@
+name: Tailor application
+
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job ID from the digest email (or a posting URL)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  tailor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/cache/restore@v4
+        with:
+          path: state
+          key: jobsearch-state-${{ github.run_id }}
+          restore-keys: jobsearch-state-
+      - name: Draft and email application kit
+        run: python -m jobsearch tailor "$JOB" > /dev/null
+        env:
+          JOB: ${{ inputs.job }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESUME_TEXT: ${{ secrets.RESUME_TEXT }}
+          CANDIDATE_CONTEXT: ${{ secrets.CANDIDATE_CONTEXT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}

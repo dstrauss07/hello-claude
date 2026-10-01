@@ -1,0 +1,10 @@
+[
+ {"source":"USAJobs","title":"Industrial-Organizational Psychologist","company":"Department of the Interior","location":"Anywhere in the U.S. (remote job)","url":"https://www.usajobs.gov/job/1","description":"Develop and validate competency-based assessments and conduct job analysis. Flexible schedule available.","salary_min":86962,"salary_max":113047,"posted":"2026-09-28","remote":true,"workplace":"remote","extra":{"grade":"GS-12","closes":"2026-10-14"}},
+ {"source":"Adzuna","title":"Change Management Consultant","company":"Acme Health","location":"Sandy Springs, Fulton County","url":"https://example.com/2","description":"Hybrid role, 2 days in office. Lead organizational change initiatives. Paid family leave.","salary_min":95000,"salary_max":115000,"posted":"2026-09-29"},
+ {"source":"Adzuna","title":"Organizational Development Specialist","company":"Big Bank","location":"Atlanta, Fulton County","url":"https://example.com/3","description":"On-site five days a week in Midtown. Travel up to 50% to branch offices.","posted":"2026-09-29"},
+ {"source":"Adzuna","title":"Talent Management Program Manager","company":"Research Triangle Co","location":"Durham, NC","url":"https://example.com/4","description":"On-site role supporting talent reviews.","posted":"2026-09-27"},
+ {"source":"Adzuna","title":"Clinical Psychologist","company":"Clinic","location":"Marietta, GA","url":"https://example.com/5","description":"Licensed clinical role."},
+ {"source":"Adzuna","title":"Warehouse Associate","company":"Shipper","location":"Marietta, GA","url":"https://example.com/6","description":"Through the night shifts."},
+ {"source":"Remotive","title":"People Analytics Analyst","company":"Remote Co","location":"Remote (USA)","url":"https://example.com/7","description":"Fully remote people analytics using R and Qualtrics.","remote":true,"workplace":"remote"},
+ {"source":"Greenhouse","title":"Change Management Consultant","company":"acme health","location":"Sandy Springs, GA","url":"https://example.com/2b","description":"Short duplicate."}
+]

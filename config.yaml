@@ -1,0 +1,90 @@
+# Job search preferences. This file is committed to a PUBLIC repo, so it holds
+# preferences only. The resume, email recipients and API keys live in GitHub
+# secrets (see README).
+
+searches:
+  # Title keywords sent to the job APIs. Her background (I-O MS + PMP + change /
+  # OD project work) fits these families best.
+  keywords:
+    - industrial organizational psychologist
+    - organizational development
+    - change management
+    - talent management
+    - people analytics
+    - leadership development
+    - learning and development program manager
+    - personnel research psychologist
+    - assessment consultant
+    - job analysis
+    - employee experience
+    - HR project manager
+  usajobs:
+    # 0180 = Psychology series (I-O psychologist roles); 0201 = HR management.
+    job_category_codes: ["0180", "0201"]
+    public_only: true        # skip internal "current federal employees only" postings
+  # Company job boards that need no API key. Find the token in a careers URL:
+  #   boards.greenhouse.io/<token>   or   jobs.lever.co/<token>
+  greenhouse_boards: []
+  lever_companies: []
+  max_days_old: 7
+
+location:
+  home: "Marietta, GA 30068"
+  adzuna_where: "Marietta, Georgia"
+  adzuna_radius_km: 50
+  # Commute tiers for hybrid/on-site roles, matched against the posting's city.
+  near:      [marietta, east cobb, roswell, sandy springs, smyrna, vinings,
+              kennesaw, cumberland, atlanta galleria]
+  ok:        [alpharetta, dunwoody, brookhaven, woodstock, acworth, chamblee,
+              norcross, johns creek, buckhead, powder springs, austell]
+  # "Atlanta" alone usually means Midtown/Downtown: a hard commute.
+  far:       [atlanta, decatur, college park, doraville, tucker, lawrenceville]
+  # Same metro as the OPM offer: relocating there is already on the table.
+  benchmark_area: [durham, raleigh, chapel hill, research triangle, morrisville, cary]
+
+benchmark:
+  # The offer being weighed. Fill in grade/salary so Claude can compare.
+  label: "OPM offer (Durham, NC; requires relocation)"
+  salary: null      # e.g. 98000
+  notes: "Federal role with OPM. Relocation required. Family prefers staying in Marietta."
+
+# How much each signal moves the rule-based pre-score (0-100 scale).
+weights:
+  remote: 30
+  hybrid_near: 22
+  hybrid_ok: 14
+  onsite_near: 10
+  hybrid_far: 4
+  onsite_ok: 2
+  onsite_far: -10
+  relocation: -12
+  benchmark_area: -6      # a move, but the same one the OPM offer already requires
+  title_strong: 25
+  title_related: 12
+  family_positive: 4      # per signal, capped
+  family_negative: -8     # per signal, capped
+
+title_rules:
+  strong: [industrial, organizational psycholog, i-o, i/o, personnel research,
+           organizational development, people analytics, talent assessment,
+           selection, job analysis, change management, talent management,
+           leadership development, organizational effectiveness, assessment]
+  related: [learning, development, employee experience, engagement, workforce,
+            human capital, hr, human resources, people, culture, program manager,
+            project manager, survey, research, training, competency, performance]
+  exclude: [intern, internship, clinical, counselor, therapist, school psycholog,
+            nurse, physician, licensed, lcsw, sales, account executive, driver,
+            warehouse, software engineer, chief, vice president, vp,
+            senior director, professor, postdoc, faculty, recruiter]
+
+family_signals:
+  positive: [flexible schedule, flexible hours, flexible work, work-life,
+             parental leave, paid family leave, childcare, dependent care,
+             compressed schedule, 4-day, four-day, remote, telework]
+  negative: ["travel up to 50", "travel up to 75", "75% travel", "50% travel",
+             "extensive travel", "overnight travel", nights and weekends,
+             weekend availability, on-call, "24/7", shift work]
+
+digest:
+  ai_review_limit: 40   # top N rule-scored jobs sent to Claude each day
+  email_top: 15
